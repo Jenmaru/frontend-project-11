@@ -1,75 +1,53 @@
 const path = require('path');
-
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// eslint-disable-next-line import/no-extraneous-dependencies
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
-  entry: {
-    main: './src/index.js',
-  },
+const isProduction = process.env.NODE_ENV === 'production';
+
+const stylesHandler = 'style-loader';
+
+const config = {
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    clean: true,
   },
-  mode: process.env.NODE_ENV || 'development',
-  module: {
-    rules: [
-      {
-        test: /\.(sc|c)ss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [
-                  [
-                    'postcss-preset-env',
-                    {
-                      stage: 3,
-                      features: {
-                        'nesting-rules': true,
-                      },
-                      browsers: 'last 5 versions',
-                    },
-                  ],
-                ],
-              },
-            },
-          },
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-    ],
+  devServer: {
+    open: true,
+    host: 'localhost',
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
-    new MiniCssExtractPlugin({
-      filename: 'style.css',
-    }),
+
+    // Add your plugins here
+    // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    compress: true,
-    host: '0.0.0.0',
-    port: 8000,
-    open: true,
-    overlay: {
-      warnings: true,
-      errors: true,
-    },
-    clientLogLevel: 'error',
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/i,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.css$/i,
+        use: [stylesHandler, 'css-loader'],
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        type: 'asset',
+      },
+
+      // Add your rules for custom modules here
+      // Learn more about loaders from https://webpack.js.org/loaders/
+    ],
   },
+};
+
+module.exports = () => {
+  if (isProduction) {
+    config.mode = 'production';
+  } else {
+    config.mode = 'development';
+  }
+  return config;
 };
