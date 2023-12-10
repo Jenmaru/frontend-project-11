@@ -1,0 +1,10 @@
+#intro {
+          background-image: url("https://img.freepik.com/free-vector/winter-blue-pink-gradient-background-vector_53876-117276.jpg?w=900&t=st=1701416841~exp=1701417441~hmac=f95935d6b4dd1a038242c6d905302f178683abfb96f95c3964315189ba4041f6");
+          background-blend-mode: darken, luminosity;
+          background-repeat: no-repeat; 
+          background-size: cover;
+        }
+        #nitro {
+          background-image: url("https://img.freepik.com/free-photo/white-painted-wall-texture-background_53876-138197.jpg");
+          background-repeat: no-repeat; 
+        }

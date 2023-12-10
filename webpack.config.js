@@ -8,7 +8,7 @@ const stylesHandler = 'style-loader';
 const config = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
     open: true,
@@ -24,6 +24,10 @@ const config = {
   ],
   module: {
     rules: [
+      {
+        test: /\.html$/,
+        use: 'html-loader'
+      },
       {
         test: /\.(js|jsx)$/i,
         loader: 'babel-loader',
