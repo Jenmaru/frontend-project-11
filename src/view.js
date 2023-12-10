@@ -39,10 +39,11 @@ const formStatus = async (state, elements, i18next, errorMessage = undefined) =>
       feedback.textContent = i18next.t(`errors.${[state.form.error]}`);
     },
     error: () => {
+      feedback.classList.add('text-danger');
       feedback.textContent = i18next.t(`errors.${errorMessage}`);
     },
   };
-  return errorMessage !== undefined ? switchStatus[status]() : switchStatus.error();
+  return errorMessage === undefined ? switchStatus[status]() : switchStatus.error();
 };
 
 const renderVisitedPosts = (visitedPosts) => {
