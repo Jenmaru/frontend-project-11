@@ -3,47 +3,40 @@ import renderPosts from './renderPosts.js';
 import renderFeeds from './renderFeeds.js';
 import renderModal from './renderModal.js';
 
-const getDefaultHTML = (elements) => {
-  const { input, feedback, button } = elements;
-  feedback.classList.remove('text-danger');
-  feedback.classList.remove('text-warning');
-  feedback.classList.remove('text-success');
-  input.classList.remove('is-invalid');
-  input.disabled = false;
-  button.disabled = true;
+const getResetHTML = (elements) => {
+  elements.feedback.classList.remove('text-danger', 'text-warning', 'text-success');
+  elements.input.classList.remove('is-invalid');
+  elements.input.disabled = false;
+  elements.button.disabled = false;
 };
 
 const formStatus = async (state, elements, i18next, errorMessage = undefined) => {
-  const {
-    input, feedback, form, button,
-  } = elements;
-  const { status } = state.form;
-  getDefaultHTML(elements);
+  getResetHTML(elements);
 
   const switchStatus = {
     loading: () => {
-      feedback.classList.add('text-warning');
-      feedback.textContent = i18next.t(`status.${status}`);
-      input.disabled = true;
-      button.disabled = true;
+      elements.feedback.classList.add('text-warning');
+      elements.feedback.textContent = i18next.t(`status.${state.form.status}`);
+      elements.input.disabled = true;
+      elements.button.disabled = true;
     },
     success: () => {
-      feedback.classList.add('text-success');
-      feedback.textContent = i18next.t(`status.${status}`);
-      form.reset();
-      input.focus();
+      elements.feedback.classList.add('text-success');
+      elements.feedback.textContent = i18next.t(`status.${state.form.status}`);
+      elements.form.reset();
+      elements.input.focus();
     },
     failed: () => {
-      feedback.classList.add('text-danger');
-      input.classList.add('is-invalid');
-      feedback.textContent = i18next.t(`errors.${[state.form.error]}`);
+      elements.feedback.classList.add('text-danger');
+      elements.input.classList.add('is-invalid');
+      elements.feedback.textContent = i18next.t(`errors.${[state.form.error]}`);
     },
     error: () => {
-      feedback.classList.add('text-danger');
-      feedback.textContent = i18next.t(`errors.${errorMessage}`);
+      elements.feedback.classList.add('text-danger');
+      elements.feedback.textContent = i18next.t(`errors.${errorMessage}`);
     },
   };
-  return errorMessage === undefined ? switchStatus[status]() : switchStatus.error();
+  return errorMessage === undefined ? switchStatus[state.form.status]() : switchStatus.error();
 };
 
 const renderVisitedPosts = (visitedPosts) => {

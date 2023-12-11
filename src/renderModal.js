@@ -10,6 +10,7 @@ export default (state, postId) => {
   const modalLink = document.querySelector('.full-article');
 
   modal.setAttribute('data-id', id);
+  modal.classList.add('container-fluid');
   modalTitle.textContent = title;
   modalBody.textContent = description;
   modalLink.setAttribute('href', link);

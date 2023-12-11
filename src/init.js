@@ -22,12 +22,12 @@ const getUpdatePosts = (state) => {
       const data = parser(response.data.contents);
 
       const comparator = (arrayValue, otherValue) => arrayValue.title === otherValue.title;
-      const addedPosts = _.differenceWith(data.items, state.posts, comparator);
+      const addedPost = _.differenceWith(data.items, state.posts, comparator);
 
-      if (addedPosts.length === 0) {
+      if (addedPost.length === 0) {
         return;
       }
-      state.posts = addedPosts.concat(...state.posts);
+      state.posts = addedPost.concat(...state.posts);
     })
     .catch((err) => {
       console.error(err);
