@@ -26,7 +26,7 @@ const config = {
     rules: [
       {
         test: /\.html$/,
-        use: 'html-loader'
+        use: 'html-loader',
       },
       {
         test: /\.(js|jsx)$/i,
