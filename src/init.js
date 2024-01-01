@@ -70,6 +70,13 @@ const actionsObject = {
         watchedState.form.error = err.message;
       });
   },
+  getNewList: (target, watchedState) => {
+    const { id } = target.dataset;
+    watchedState.currentPost = id;
+    if (!watchedState.visitedPosts.includes(id)) {
+      watchedState.visitedPosts.push(id);
+    }
+  },
   elements: {
     form: document.querySelector('form'),
     input: document.querySelector('#url-input'),
@@ -118,14 +125,7 @@ const init = async () => {
   });
 
   elements.posts.addEventListener('click', ({ target }) => {
-    const getNewList = () => {
-      const { id } = target.dataset;
-      watchedState.currentPost = id;
-      if (!watchedState.visitedPosts.includes(id)) {
-        watchedState.visitedPosts.push(id);
-      }
-    };
-    target.dataset.id !== undefined ? getNewList() : false;
+    target.dataset.id !== undefined ? actionsObject.getNewList(target, watchedState) : false;
   });
 
   getUpdatePosts(watchedState);
