@@ -70,7 +70,7 @@ const actionsObject = {
         watchedState.form.error = err.message;
       });
   },
-  getNewList: (target, watchedState) => {
+  clickListener: (target, watchedState) => {
     const { id } = target.dataset;
     watchedState.currentPost = id;
     if (!watchedState.visitedPosts.includes(id)) {
@@ -125,7 +125,7 @@ const init = async () => {
   });
 
   elements.posts.addEventListener('click', ({ target }) => {
-    target.dataset.id !== undefined ? actionsObject.getNewList(target, watchedState) : false;
+    target.dataset.id !== undefined ? actionsObject.clickListener(target, watchedState) : false;
   });
 
   getUpdatePosts(watchedState);

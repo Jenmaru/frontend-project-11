@@ -17,7 +17,6 @@ export default (state, listGroup, elements, i18next) => {
     const aElement = document.createElement('a');
     aElement.textContent = post.title;
     getElementClass(aElement, post.id);
-    aElement.classList.add('text-info', 'text-gradient', 'link-secondary', 'link-gradient');
     aElement.setAttribute('href', post.link);
     aElement.setAttribute('data-id', post.id);
     aElement.setAttribute('target', '_blank');
