@@ -70,6 +70,24 @@ const actionsObject = {
         watchedState.form.error = err.message;
       });
   },
+  elements: {
+    form: document.querySelector('form'),
+    input: document.querySelector('#url-input'),
+    button: document.querySelector('button'),
+    posts: document.querySelector('.posts'),
+    feeds: document.querySelector('.feeds'),
+    feedback: document.querySelector('.feedback'),
+  },
+  state: {
+    form: {
+      status: 'filling',
+      error: null,
+    },
+    feeds: [],
+    posts: [],
+    currentPost: null,
+    visitedPosts: [],
+  },
 };
 
 const init = async () => {
@@ -82,25 +100,9 @@ const init = async () => {
     },
   });
 
-  const elements = {
-    form: document.querySelector('form'),
-    input: document.querySelector('#url-input'),
-    button: document.querySelector('button'),
-    posts: document.querySelector('.posts'),
-    feeds: document.querySelector('.feeds'),
-    feedback: document.querySelector('.feedback'),
-  };
+  const { elements } = actionsObject;
 
-  const state = {
-    form: {
-      status: 'filling',
-      error: null,
-    },
-    feeds: [],
-    posts: [],
-    currentPost: null,
-    visitedPosts: [],
-  };
+  const { state } = actionsObject;
 
   const watchedState = watchedChange(state, elements, i18n);
 
