@@ -21,8 +21,8 @@ const getUpdatePosts = (state) => {
     .then((response) => {
       const data = parser(response.data.contents);
 
-      const comparator = (arrayValue, value) => arrayValue.title === value.title;
-      const addedPost = _.differenceWith(data.items, state.posts, comparator);
+      const getCompareValue = (arrayValue, value) => arrayValue.title === value.title;
+      const addedPost = _.differenceWith(data.items, state.posts, getCompareValue);
 
       if (addedPost.length === 0) {
         return;
@@ -43,6 +43,34 @@ const validateUrl = (url, urls) => yup
   .notOneOf(urls, 'alreadyLoaded')
   .required('required')
   .validate(url);
+
+const actionsObject = {
+  formListener: (currentUrl, urls, watchedState) => {
+    validateUrl(currentUrl, urls)
+      .then((url) => axios.get(getProxiedUrl(url)))
+      .then((response) => {
+        const data = parser(response.data.contents);
+        data.feed.id = _.uniqueId();
+        data.feed.url = currentUrl;
+        const itemsWithId = Array.from(data.items).map((item) => {
+          item.id = _.uniqueId();
+          return item;
+        });
+        data.items = itemsWithId;
+        watchedState.feeds.push(data.feed);
+        watchedState.posts.unshift(...data.items);
+        watchedState.form.status = 'success';
+      })
+      .catch((err) => {
+        watchedState.form.status = 'failed';
+        if (err.name === 'AxiosError') {
+          watchedState.form.error = 'network';
+          return;
+        }
+        watchedState.form.error = err.message;
+      });
+  },
+};
 
 const init = async () => {
   const i18n = i18next.createInstance();
@@ -84,29 +112,7 @@ const init = async () => {
     watchedState.form.status = 'loading';
     const urls = state.feeds.map((feed) => feed.url);
 
-    validateUrl(currentUrl, urls)
-      .then((url) => axios.get(getProxiedUrl(url)))
-      .then((response) => {
-        const data = parser(response.data.contents);
-        data.feed.id = _.uniqueId();
-        data.feed.url = currentUrl;
-        const itemsWithId = Array.from(data.items).map((item) => {
-          item.id = _.uniqueId();
-          return item;
-        });
-        data.items = itemsWithId;
-        watchedState.feeds.push(data.feed);
-        watchedState.posts.unshift(...data.items);
-        watchedState.form.status = 'success';
-      })
-      .catch((err) => {
-        watchedState.form.status = 'failed';
-        if (err.name === 'AxiosError') {
-          watchedState.form.error = 'network';
-          return;
-        }
-        watchedState.form.error = err.message;
-      });
+    actionsObject.formListener(currentUrl, urls, watchedState);
   });
 
   elements.posts.addEventListener('click', ({ target }) => {
