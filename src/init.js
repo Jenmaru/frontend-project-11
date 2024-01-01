@@ -125,7 +125,9 @@ const init = async () => {
   });
 
   elements.posts.addEventListener('click', ({ target }) => {
-    target.dataset.id !== undefined ? actionsObject.clickListener(target, watchedState) : false;
+    if (target.dataset.id !== undefined) {
+      actionsObject.clickListener(target, watchedState);
+    }
   });
 
   getUpdatePosts(watchedState);
