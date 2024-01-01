@@ -42,7 +42,7 @@ const formStatus = async (state, elements, i18next, errorMessage = undefined) =>
 const renderVisitedPosts = (visitedPosts) => {
   visitedPosts.forEach((id) => {
     const link = document.querySelector(`a[data-id="${id}"]`);
-    link.classList.remove('fw-bold');
+    link.classList.remove('fw-bold', 'text-info');
     link.classList.add('fw-normal', 'link-secondary');
   });
 };

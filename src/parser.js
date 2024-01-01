@@ -15,9 +15,9 @@ export default (data) => {
       title: doc.querySelector('title').textContent,
       description: doc.querySelector('description').textContent,
     };
-    const itemsEl = doc.querySelectorAll('item');
+    const itemsElement = doc.querySelectorAll('item');
 
-    const items = Array.from(itemsEl).map((item) => {
+    const items = Array.from(itemsElement).map((item) => {
       const title = item.querySelector('title').textContent;
       const description = item.querySelector('description').textContent;
       const link = item.querySelector('link').textContent;

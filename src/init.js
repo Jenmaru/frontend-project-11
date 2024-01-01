@@ -21,7 +21,7 @@ const getUpdatePosts = (state) => {
     .then((response) => {
       const data = parser(response.data.contents);
 
-      const comparator = (arrayValue, otherValue) => arrayValue.title === otherValue.title;
+      const comparator = (arrayValue, value) => arrayValue.title === value.title;
       const addedPost = _.differenceWith(data.items, state.posts, comparator);
 
       if (addedPost.length === 0) {
@@ -55,12 +55,12 @@ const init = async () => {
   });
 
   const elements = {
-    input: document.querySelector('#url-input'),
-    feedback: document.querySelector('.feedback'),
     form: document.querySelector('form'),
+    input: document.querySelector('#url-input'),
     button: document.querySelector('button'),
     posts: document.querySelector('.posts'),
     feeds: document.querySelector('.feeds'),
+    feedback: document.querySelector('.feedback'),
   };
 
   const state = {
@@ -78,10 +78,12 @@ const init = async () => {
 
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
     const currentUrl = formData.get('url');
     watchedState.form.status = 'loading';
     const urls = state.feeds.map((feed) => feed.url);
+
     validateUrl(currentUrl, urls)
       .then((url) => axios.get(getProxiedUrl(url)))
       .then((response) => {
@@ -108,11 +110,14 @@ const init = async () => {
   });
 
   elements.posts.addEventListener('click', ({ target }) => {
-    const { id } = target.dataset;
-    watchedState.currentPost = id;
-    if (!watchedState.visitedPosts.includes(id)) {
-      watchedState.visitedPosts.push(id);
-    }
+    const getNewList = () => {
+      const { id } = target.dataset;
+      watchedState.currentPost = id;
+      if (!watchedState.visitedPosts.includes(id)) {
+        watchedState.visitedPosts.push(id);
+      }
+    };
+    target.dataset.id !== undefined ? getNewList() : false;
   });
 
   getUpdatePosts(watchedState);

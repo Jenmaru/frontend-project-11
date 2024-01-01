@@ -1,10 +1,10 @@
 export default (feedsList, elements, i18next) => {
-  const divEl = document.createElement('div');
-  divEl.classList.add('list-group', 'border-0', 'rounded-0');
+  const divElement = document.createElement('div');
+  divElement.classList.add('list-group', 'border-0', 'rounded-0');
 
   feedsList.forEach((feed) => {
-    const liEL = document.createElement('li');
-    liEL.classList.add('list-group-item', 'border-0', 'border-end-0', 'bg-light');
+    const liElement = document.createElement('li');
+    liElement.classList.add('list-group-item', 'border-0', 'border-end-0', 'bg-light');
 
     const header = document.createElement('h3');
     header.classList.add('h6', 'm-0');
@@ -14,10 +14,10 @@ export default (feedsList, elements, i18next) => {
     description.classList.add('m-0', 'small', 'text-black-50');
     description.textContent = feed.description;
 
-    liEL.prepend(description);
-    liEL.prepend(header);
+    liElement.prepend(description);
+    liElement.prepend(header);
 
-    divEl.prepend(liEL);
+    divElement.prepend(liElement);
   });
 
   const title = document.createElement('h2');
@@ -32,7 +32,7 @@ export default (feedsList, elements, i18next) => {
   card.classList.add('card', 'border-0');
 
   card.prepend(cardBody);
-  card.append(divEl);
+  card.append(divElement);
 
   const { feeds } = elements;
   feeds.replaceChildren(card);
