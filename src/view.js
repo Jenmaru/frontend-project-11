@@ -10,6 +10,10 @@ const resetHTML = (elements) => {
   elements.button.disabled = false;
 };
 
+const error = (elements, value, i18n) => {
+  elements.feedback.textContent = i18n.t(`errors.${value}`);
+};
+
 const formStatus = async (state, elements, i18next) => {
   resetHTML(elements);
 
@@ -49,7 +53,7 @@ const watchedChange = (state, elements, i18n) => onChange(state, (path, value) =
       formStatus(state, elements, i18n);
       break;
     case 'form.error':
-      elements.feedback.textContent = i18n.t(`errors.${value}`);
+      error(elements, value, i18n);
       break;
     case 'posts':
       renderPosts(state, value, elements, i18n);
