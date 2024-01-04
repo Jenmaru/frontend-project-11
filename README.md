@@ -9,7 +9,7 @@ The RSS news aggregator is a platform that enables you to gather multiple news c
 System requirements: node 16.x version
 ```bash
 #clone this repository on your machine
-$git clone git@github.com:Sergey-frontend/rss-agregator.git
+$git clone git@github.com:Jenmaru/frontend-project-11.git
 
 #go to directory where you downloaded it
 $cd rss-agregator
