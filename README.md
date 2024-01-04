@@ -12,7 +12,7 @@ System requirements: node 16.x version
 $git clone git@github.com:Jenmaru/frontend-project-11.git
 
 #go to directory where you downloaded it
-$cd rss-agregator
+$cd frontend-project-11
 
 # run the one of these command to install all necessary dependencies
 $make install
@@ -23,6 +23,6 @@ $npm ci
 $npm run build
 
 #run application on localhost
-$npm run serve
+$npm webpack serve
 or
-$make run
+$make develop
