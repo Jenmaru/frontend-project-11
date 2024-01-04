@@ -77,15 +77,28 @@ const actionsObject = {
       watchedState.visitedPosts.push(id);
     }
   },
-  elements: {
+};
+
+const init = async () => {
+  const i18n = i18next.createInstance();
+  i18n.init({
+    lng: 'ru',
+    debug: false,
+    resources: {
+      ru,
+    },
+  });
+
+  const elements = {
     form: document.querySelector('form'),
     input: document.querySelector('#url-input'),
     button: document.querySelector('button'),
     posts: document.querySelector('.posts'),
     feeds: document.querySelector('.feeds'),
     feedback: document.querySelector('.feedback'),
-  },
-  state: {
+  };
+
+  const state = {
     form: {
       status: 'filling',
       error: null,
@@ -94,22 +107,7 @@ const actionsObject = {
     posts: [],
     currentPost: null,
     visitedPosts: [],
-  },
-};
-
-const init = async () => {
-  const i18n = i18next.createInstance();
-  await i18n.init({
-    lng: 'ru',
-    debug: false,
-    resources: {
-      ru,
-    },
-  });
-
-  const { elements } = actionsObject;
-
-  const { state } = actionsObject;
+  };
 
   const watchedState = watchedChange(state, elements, i18n);
 

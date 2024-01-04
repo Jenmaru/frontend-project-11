@@ -3,15 +3,15 @@ import renderPosts from './renderPosts.js';
 import renderFeeds from './renderFeeds.js';
 import renderModal from './renderModal.js';
 
-const getResetHTML = (elements) => {
+const resetHTML = (elements) => {
   elements.feedback.classList.remove('text-danger', 'text-warning', 'text-success');
   elements.input.classList.remove('is-invalid');
   elements.input.disabled = false;
   elements.button.disabled = false;
 };
 
-const formStatus = async (state, elements, i18next, errorMessage = undefined) => {
-  getResetHTML(elements);
+const formStatus = async (state, elements, i18next) => {
+  resetHTML(elements);
 
   const switchStatus = {
     loading: () => {
@@ -29,14 +29,10 @@ const formStatus = async (state, elements, i18next, errorMessage = undefined) =>
     failed: () => {
       elements.feedback.classList.add('text-danger');
       elements.input.classList.add('is-invalid');
-      elements.feedback.textContent = i18next.t(`errors.${[state.form.error]}`);
-    },
-    error: () => {
-      elements.feedback.classList.add('text-danger');
-      elements.feedback.textContent = i18next.t(`errors.${errorMessage}`);
+      elements.feedback.textContent = i18next.t(`errors.${[state.form.failed]}`);
     },
   };
-  return errorMessage === undefined ? switchStatus[state.form.status]() : switchStatus.error();
+  return switchStatus[state.form.status]();
 };
 
 const renderVisitedPosts = (visitedPosts) => {
@@ -48,27 +44,28 @@ const renderVisitedPosts = (visitedPosts) => {
 };
 
 const watchedChange = (state, elements, i18n) => onChange(state, (path, value) => {
-  const watchedSwitch = {
-    'form.status': () => {
+  switch (path) {
+    case 'form.status':
       formStatus(state, elements, i18n);
-    },
-    'form.error': () => {
-      formStatus(state, elements, i18n, value);
-    },
-    posts: () => {
+      break;
+    case 'form.error':
+      elements.feedback.textContent = i18n.t(`errors.${value}`);
+      break;
+    case 'posts':
       renderPosts(state, value, elements, i18n);
-    },
-    feeds: () => {
+      break;
+    case 'feeds':
       renderFeeds(value, elements, i18n);
-    },
-    visitedPosts: () => {
+      break;
+    case 'visitedPosts':
       renderVisitedPosts(value);
-    },
-    currentPost: () => {
+      break;
+    case 'currentPost':
       renderModal(state, value);
-    },
-  };
-  return watchedSwitch[path]();
+      break;
+    default:
+      break;
+  }
 });
 
 export default watchedChange;
