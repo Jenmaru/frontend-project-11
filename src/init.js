@@ -44,8 +44,37 @@ const validateUrl = (url, urls) => yup
   .required('required')
   .validate(url);
 
-const actionsObject = {
-  formListener: (currentUrl, urls, watchedState) => {
+const app = (i18n) => {
+  const elements = {
+    form: document.querySelector('form'),
+    input: document.querySelector('#url-input'),
+    button: document.querySelector('button[type=submit]'),
+    posts: document.querySelector('.posts'),
+    feeds: document.querySelector('.feeds'),
+    feedback: document.querySelector('.feedback'),
+  };
+
+  const state = {
+    form: {
+      status: 'filling',
+      error: null,
+    },
+    feeds: [],
+    posts: [],
+    currentPost: null,
+    visitedPosts: [],
+  };
+
+  const watchedState = watchedChange(state, elements, i18n);
+
+  elements.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    watchedState.form.status = 'loading';
+    const currentUrl = formData.get('url');
+    const urls = state.feeds.map((feed) => feed.url);
+
     validateUrl(currentUrl, urls)
       .then((url) => axios.get(getProxiedUrl(url)))
       .then((response) => {
@@ -69,14 +98,19 @@ const actionsObject = {
         }
         watchedState.form.error = err.message;
       });
-  },
-  clickListener: (target, watchedState) => {
-    const { id } = target.dataset;
-    watchedState.currentPost = id;
-    if (!watchedState.visitedPosts.includes(id)) {
-      watchedState.visitedPosts.push(id);
+  });
+
+  elements.posts.addEventListener('click', ({ target }) => {
+    if (target.dataset.id !== undefined) {
+      const { id } = target.dataset;
+      watchedState.currentPost = id;
+      if (!watchedState.visitedPosts.includes(id)) {
+        watchedState.visitedPosts.push(id);
+      }
     }
-  },
+  });
+
+  getUpdatePosts(watchedState);
 };
 
 const init = async () => {
@@ -87,48 +121,7 @@ const init = async () => {
     resources: {
       ru,
     },
-  });
-
-  const elements = {
-    form: document.querySelector('form'),
-    input: document.querySelector('#url-input'),
-    button: document.querySelector('button'),
-    posts: document.querySelector('.posts'),
-    feeds: document.querySelector('.feeds'),
-    feedback: document.querySelector('.feedback'),
-  };
-
-  const state = {
-    form: {
-      status: 'filling',
-      error: null,
-    },
-    feeds: [],
-    posts: [],
-    currentPost: null,
-    visitedPosts: [],
-  };
-
-  const watchedState = watchedChange(state, elements, i18n);
-
-  elements.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const currentUrl = formData.get('url');
-    watchedState.form.status = 'loading';
-    const urls = state.feeds.map((feed) => feed.url);
-
-    actionsObject.formListener(currentUrl, urls, watchedState);
-  });
-
-  elements.posts.addEventListener('click', ({ target }) => {
-    if (target.dataset.id !== undefined) {
-      actionsObject.clickListener(target, watchedState);
-    }
-  });
-
-  getUpdatePosts(watchedState);
+  }).then(() => app(i18n));
 };
 
 export default init;

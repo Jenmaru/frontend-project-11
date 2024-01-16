@@ -21,8 +21,8 @@ const formStatus = async (state, elements, i18next) => {
     loading: () => {
       elements.feedback.classList.add('text-warning');
       elements.feedback.textContent = i18next.t(`status.${state.form.status}`);
-      elements.input.disabled = true;
-      elements.button.disabled = true;
+      elements.input.setAttribute('disabled', 'disabled');
+      elements.button.setAttribute('disabled', 'disabled');
     },
     success: () => {
       elements.feedback.classList.add('text-success');
@@ -33,7 +33,7 @@ const formStatus = async (state, elements, i18next) => {
     failed: () => {
       elements.feedback.classList.add('text-danger');
       elements.input.classList.add('is-invalid');
-      elements.feedback.textContent = i18next.t(`errors.${[state.form.failed]}`);
+      elements.feedback.textContent = i18next.t(`errors.${[state.form.error]}`);
     },
   };
   return switchStatus[state.form.status]();
