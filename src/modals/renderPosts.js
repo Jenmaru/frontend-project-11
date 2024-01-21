@@ -2,7 +2,7 @@ export default (state, listGroup, elements, i18next) => {
   const ulElement = document.createElement('ul');
   ulElement.classList.add('list-group', 'border-0', 'rounded-0');
 
-  const getElementClass = (a, id) => (state.visitedPosts.includes(id) ? a.classList.add('fw-normal') : a.classList.add('fw-bold'));
+  const getElementClass = (a, id) => (state.visitedPosts.has(id) ? a.classList.add('fw-normal') : a.classList.add('fw-bold'));
 
   listGroup.forEach((post) => {
     const liElement = document.createElement('li');

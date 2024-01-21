@@ -62,31 +62,28 @@ const app = (i18n) => {
     feeds: [],
     posts: [],
     currentPost: null,
-    visitedPosts: [],
+    visitedPosts: new Set(),
   };
 
   const watchedState = watchedChange(state, elements, i18n);
 
-  elements.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    watchedState.form.status = 'loading';
-    const currentUrl = formData.get('url');
-    const urls = state.feeds.map((feed) => feed.url);
-
+  const handleLink = (currentUrl, urls) => {
     validateUrl(currentUrl, urls)
       .then((url) => axios.get(getProxiedUrl(url)))
       .then((response) => {
         const data = parser(response.data.contents);
-        data.feed.id = _.uniqueId();
-        data.feed.url = currentUrl;
+        const feed = {
+          title: data.title,
+          description: data.description,
+          id: _.uniqueId(),
+          url: currentUrl,
+        };
         const itemsWithId = Array.from(data.items).map((item) => {
           item.id = _.uniqueId();
           return item;
         });
         data.items = itemsWithId;
-        watchedState.feeds.push(data.feed);
+        watchedState.feeds.push(feed);
         watchedState.posts.unshift(...data.items);
         watchedState.form.status = 'success';
       })
@@ -98,15 +95,23 @@ const app = (i18n) => {
         }
         watchedState.form.error = err.message;
       });
+  };
+
+  elements.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    watchedState.form.status = 'loading';
+    const currentUrl = formData.get('url');
+    const urls = state.feeds.map((feed) => feed.url);
+    handleLink(currentUrl, urls);
   });
 
   elements.posts.addEventListener('click', ({ target }) => {
     if (target.dataset.id !== undefined) {
       const { id } = target.dataset;
       watchedState.currentPost = id;
-      if (!watchedState.visitedPosts.includes(id)) {
-        watchedState.visitedPosts.push(id);
-      }
+      watchedState.visitedPosts.add(id);
     }
   });
 

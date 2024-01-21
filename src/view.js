@@ -1,7 +1,7 @@
 import onChange from 'on-change';
-import renderPosts from './renderPosts.js';
-import renderFeeds from './renderFeeds.js';
-import renderModal from './renderModal.js';
+import renderPosts from './modals/renderPosts.js';
+import renderFeeds from './modals/renderFeeds.js';
+import renderModal from './modals/renderModal.js';
 
 const resetHTML = (elements) => {
   elements.feedback.classList.remove('text-danger', 'text-warning', 'text-success');

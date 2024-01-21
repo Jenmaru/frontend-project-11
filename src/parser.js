@@ -11,10 +11,6 @@ export default (data) => {
   }
 
   try {
-    const feed = {
-      title: doc.querySelector('title').textContent,
-      description: doc.querySelector('description').textContent,
-    };
     const itemsElement = doc.querySelectorAll('item');
 
     const items = Array.from(itemsElement).map((item) => {
@@ -24,7 +20,11 @@ export default (data) => {
 
       return { title, description, link };
     });
-    return { feed, items };
+    return {
+      title: doc.querySelector('title').textContent,
+      description: doc.querySelector('description').textContent,
+      items,
+    };
   } catch (e) {
     e.message = 'unableToParseData';
     throw e;
